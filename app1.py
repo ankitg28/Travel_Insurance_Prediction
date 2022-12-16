@@ -13,12 +13,16 @@ Created on Wed Dec 14 12:50:04 2022
 """
 
 
+
+        
 import numpy as np
 import pickle
 import pandas as pd
 #from flasgger import Swagger
 import streamlit as st 
 
+def subheader(url):
+     st.markdown(f'<p style="background-color:#0066cc;color:#33ff33;font-size:24px;border-radius:2%;">{url}</p>', unsafe_allow_html=True)
 from PIL import Image
 
 #app=Flask(__name__)
@@ -75,30 +79,46 @@ def main():
     </div>
     """
     st.markdown(html_temp,unsafe_allow_html=True)
-    age = st.text_input("Enter Age","")
-    employmenttype = st.text_input("What's your Employment Type - 1. Government/Public Sector 2. Private Sector","")
-    graduateornot  = st.text_input("Are you a graduate? Yes/No","")
-    annualincome = st.text_input("Please enter Annual Income","")
-    familymembers = st.text_input("How many family members do you have?","")
-    chronicdiseases = st.text_input("Suffering from chronic diseases??","")
-    frequentflyer = st.text_input("Do you fly often?","")
-    evertravelledabroad = st.text_input("Have you ever travelled abroad?","")
+    age = st.text_input("Enter Age",25)
+    employmenttype = st.text_input("What's your Employment Type - 0. Government/Public Sector 1. Private Sector",0)
+    graduateornot  = st.text_input("Are you a graduate? Yes/No",1)
+    annualincome = st.text_input("Please enter Annual Income",1)
+    familymembers = st.text_input("How many family members do you have?",1)
+    chronicdiseases = st.text_input("Suffering from chronic diseases??",1)
+    frequentflyer = st.text_input("Do you fly often?",1)
+    evertravelledabroad = st.text_input("Have you ever travelled abroad?",1)
     result=""
+    #         result=predict_note_authentication(0.6,0,0,0.066667,0.571429,1,1,1)
     if st.button("Predict"):
-        result=predict_note_authentication(age,employmenttype,graduateornot,annualincome,familymembers,chronicdiseases,frequentflyer,evertravelledabroad)
-#         result=predict_note_authentication(0.6,0,0,0.066667,0.571429,1,1,1)
-    if result == 0:
-        st.success("As per inputs, Model prediction is that you will not buy Travel Insurance!!")
-    else:
-        st.success("As per inputs, Model prediction is that you will buy Travel Insurance!!")
+        if int(age) <= 0:
+            st.error("Please enter a valid age")
+        elif not(int(employmenttype) == 0 or int(employmenttype) == 1):
+            st.error("Please enter a valid Employment type - 0 or 1")
+        elif not(int(graduateornot) == 0 or int(graduateornot) ==1):
+            st.error("Please type 0 or 1")
+        elif not(int(chronicdiseases) == 0 or int(chronicdiseases) ==1):
+            st.error("Please type 0 or 1")
+        elif not(int(frequentflyer) == 0 or int(frequentflyer) ==1):
+            st.error("Please type 0 or 1")
+        elif not(int(evertravelledabroad) == 0 or int(evertravelledabroad) ==1):
+            st.error("Please type 0 or 1")
+        elif int(annualincome) <= 0:
+            st.error("Please Enter a valid Income")
+        else:
+#             return
+            result = predict_note_authentication(age,employmenttype,graduateornot,annualincome,familymembers,chronicdiseases,frequentflyer,evertravelledabroad)
+            if result == 0:
+                st.subheader("As per inputs, Model prediction is that you will not buy Travel Insurance!!")
+            else:
+                st.subheader("As per inputs, Model prediction is that you will buy Travel Insurance!!")
         
 #     st.success('The output is {}'.format(result))
     if st.button("About"):
-        st.text("Lets LEarn")
-        st.text("Built with Streamlit")
+        st.write("Check out my Medium article:  [link](https://medium.com/@goyalankit28/travel-insurance-prediction-journey-from-dataset-selection-to-ui-based-prediction-44eeb996f778)")
+#         st.text("Medium Article - https://medium.com/@goyalankit28/travel-insurance-prediction-journey-from-dataset-selection-to-ui-based-prediction-44eeb996f778")
+        st.write("Check my Python Jupyter Notebook: [link](https://github.com/ankitg28/Travel_Insurance_Prediction/blob/main/6105_Combine_Data_Cleaning_Feature_Selection_Modeling_and_Interpretability_Travel_Insurance_Prediction.ipynb)")
+        st.write("Check my github repository: [link](https://github.com/ankitg28/Travel_Insurance_Prediction)")
 
 if __name__=='__main__':
     main()
-    
-    
     
